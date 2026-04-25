@@ -261,6 +261,46 @@
       </main>
     </div>
 
+    <div class="modal-shell hidden" id="confirmation-modal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal="true"></div>
+      <section
+        class="modal-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirmation-title"
+      >
+        <button class="modal-close" id="close-modal" type="button" aria-label="Close dialog">
+          Close
+        </button>
+        <p class="eyebrow">Item found confirmation</p>
+        <h3 id="confirmation-title">Confirm this item was found</h3>
+        <p class="modal-text" id="confirmation-subtitle">
+          Update the listing with a short note so everyone knows the item has been recovered.
+        </p>
+
+        <form class="confirmation-form" id="confirmation-form">
+          <label class="message-field">
+            <span>Confirmation note</span>
+            <textarea
+              id="confirmation-note"
+              name="confirmationNote"
+              rows="4"
+              placeholder="Example: Returned to the library desk and verified with student ID."
+              required
+            ></textarea>
+          </label>
+
+          <div class="form-actions">
+            <p id="confirmation-feedback">This will mark the case as resolved.</p>
+            <div class="action-row">
+              <button class="ghost-button" id="cancel-confirmation" type="button">Cancel</button>
+              <button class="primary-button" type="submit">Confirm found</button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </div>
+
     <template id="card-template">
       <article class="item-card">
         <div class="card-topline">
@@ -289,6 +329,12 @@
             <dd class="card-date"></dd>
           </div>
         </dl>
+        <div class="confirmation-banner hidden"></div>
+        <div class="card-actions">
+          <button class="secondary-button confirm-button hidden" type="button">
+            Confirm item found
+          </button>
+        </div>
       </article>
     </template>
 

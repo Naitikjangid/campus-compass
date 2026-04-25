@@ -1,4 +1,5 @@
 const STORAGE_KEY = "campus-compass-reports";
+const REPORT_UPDATES_KEY = "campus-compass-report-updates";
 
 const iconMap = {
   electronics: "EL",
@@ -130,8 +131,9 @@ const seedItems = [
 ];
 
 const state = {
-  reports: [...seedItems, ...loadSavedItems()],
-  quickFilter: "all"
+  reports: buildInitialReports(),
+  quickFilter: "all",
+  pendingConfirmationId: null
 };
 
 const elements = {
@@ -152,7 +154,14 @@ const elements = {
   feedback: document.getElementById("form-feedback"),
   statTotal: document.getElementById("stat-total"),
   statFound: document.getElementById("stat-found"),
-  statResolved: document.getElementById("stat-resolved")
+  statResolved: document.getElementById("stat-resolved"),
+  confirmationModal: document.getElementById("confirmation-modal"),
+  confirmationForm: document.getElementById("confirmation-form"),
+  confirmationNote: document.getElementById("confirmation-note"),
+  confirmationSubtitle: document.getElementById("confirmation-subtitle"),
+  confirmationFeedback: document.getElementById("confirmation-feedback"),
+  closeModalButton: document.getElementById("close-modal"),
+  cancelConfirmationButton: document.getElementById("cancel-confirmation")
 };
 
 init();
@@ -202,6 +211,20 @@ function bindEvents() {
   });
 
   elements.form.addEventListener("submit", handleSubmit);
+  elements.grid.addEventListener("click", handleCardAction);
+  elements.confirmationForm.addEventListener("submit", handleConfirmationSubmit);
+  elements.closeModalButton.addEventListener("click", closeConfirmationModal);
+  elements.cancelConfirmationButton.addEventListener("click", closeConfirmationModal);
+  elements.confirmationModal.addEventListener("click", (event) => {
+    if (event.target.dataset.closeModal === "true") {
+      closeConfirmationModal();
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !elements.confirmationModal.classList.contains("hidden")) {
+      closeConfirmationModal();
+    }
+  });
 }
 
 function populateFilterOptions() {
@@ -236,6 +259,8 @@ function render() {
     const typePill = template.querySelector(".type-pill");
     const statusPill = template.querySelector(".status-pill");
     const icon = template.querySelector(".card-icon");
+    const confirmationBanner = template.querySelector(".confirmation-banner");
+    const confirmButton = template.querySelector(".confirm-button");
 
     typePill.textContent = report.type;
     typePill.classList.add(report.type);
@@ -256,6 +281,16 @@ function render() {
       card.style.borderTop = "5px solid rgba(242, 161, 84, 0.95)";
     } else {
       card.style.borderTop = "5px solid rgba(15, 118, 110, 0.95)";
+    }
+
+    if (report.confirmationNote) {
+      confirmationBanner.classList.remove("hidden");
+      confirmationBanner.textContent = `Found confirmed ${formatDate(report.confirmationDate)}. ${report.confirmationNote}`;
+    }
+
+    if (report.type === "lost" && report.status !== "resolved") {
+      confirmButton.classList.remove("hidden");
+      confirmButton.dataset.reportId = report.id;
     }
 
     fragment.appendChild(template);
@@ -357,6 +392,69 @@ function handleSubmit(event) {
   render();
 }
 
+function handleCardAction(event) {
+  const confirmButton = event.target.closest(".confirm-button");
+  if (!confirmButton) {
+    return;
+  }
+
+  openConfirmationModal(confirmButton.dataset.reportId);
+}
+
+function openConfirmationModal(reportId) {
+  const report = state.reports.find((item) => item.id === reportId);
+  if (!report) {
+    return;
+  }
+
+  state.pendingConfirmationId = reportId;
+  elements.confirmationSubtitle.textContent = `You are confirming that "${report.title}" from ${report.zone} has been found or returned.`;
+  elements.confirmationFeedback.textContent = "This will mark the case as resolved.";
+  elements.confirmationForm.reset();
+  elements.confirmationModal.classList.remove("hidden");
+  elements.confirmationModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+  elements.confirmationNote.focus();
+}
+
+function closeConfirmationModal() {
+  state.pendingConfirmationId = null;
+  elements.confirmationModal.classList.add("hidden");
+  elements.confirmationModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+  elements.confirmationForm.reset();
+}
+
+function handleConfirmationSubmit(event) {
+  event.preventDefault();
+
+  const report = state.reports.find((item) => item.id === state.pendingConfirmationId);
+  if (!report) {
+    closeConfirmationModal();
+    return;
+  }
+
+  const confirmationNote = elements.confirmationNote.value.trim();
+  const confirmationDate = new Date().toISOString().slice(0, 10);
+
+  Object.assign(report, {
+    status: "resolved",
+    confirmationNote,
+    confirmationDate
+  });
+
+  persistReportUpdate(report.id, {
+    status: "resolved",
+    confirmationNote,
+    confirmationDate
+  });
+
+  elements.feedback.textContent = `"${report.title}" has been marked as found and moved to resolved cases.`;
+  updateStats();
+  closeConfirmationModal();
+  render();
+}
+
 function syncDynamicFilterOptions(report) {
   if (![...elements.categoryFilter.options].some((option) => option.value === report.category)) {
     elements.categoryFilter.appendChild(createOption(report.category, formatCategoryLabel(report.category)));
@@ -374,6 +472,34 @@ function loadSavedItems() {
   } catch (error) {
     return [];
   }
+}
+
+function buildInitialReports() {
+  const reports = [...seedItems, ...loadSavedItems()];
+  const updates = loadReportUpdates();
+
+  return reports.map((report) => ({
+    ...report,
+    ...(updates[report.id] || {})
+  }));
+}
+
+function loadReportUpdates() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(REPORT_UPDATES_KEY) || "{}");
+    return saved && typeof saved === "object" ? saved : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function persistReportUpdate(reportId, payload) {
+  const updates = loadReportUpdates();
+  updates[reportId] = {
+    ...(updates[reportId] || {}),
+    ...payload
+  };
+  localStorage.setItem(REPORT_UPDATES_KEY, JSON.stringify(updates));
 }
 
 function hydrateFiltersFromUrl() {
