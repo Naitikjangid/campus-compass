@@ -175,6 +175,27 @@ h3 {
   flex: 1;
 }
 
+.campus-shot {
+  margin: 0 0 18px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.campus-shot img {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.campus-shot figcaption {
+  padding: 12px 14px 14px;
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.74);
+}
+
 .hero-text {
   max-width: 58ch;
   font-size: 1.08rem;
@@ -385,6 +406,20 @@ textarea {
   gap: 16px;
   min-height: 100%;
   animation: rise-in 0.56s ease both;
+}
+
+.card-media {
+  overflow: hidden;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.08), rgba(242, 161, 84, 0.12));
+  border: 1px solid rgba(29, 36, 51, 0.08);
+}
+
+.card-image {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
 }
 
 .item-card:nth-child(2n) {

@@ -19,6 +19,15 @@ const categoryLabels = {
   other: "Other"
 };
 
+const categoryImageMap = {
+  electronics: "./assets/item-macbook.svg",
+  id: "./assets/item-id-card.svg",
+  accessories: "./assets/item-keys.svg",
+  study: "./assets/item-calculator.svg",
+  clothing: "./assets/item-hoodie.svg",
+  other: "./assets/item-other-box.svg"
+};
+
 const seedItems = [
   {
     id: "cc-001",
@@ -30,7 +39,8 @@ const seedItems = [
     descriptor: "Silver with campus eco sticker",
     description: "Left during an evening study session. Charger was inside a navy sleeve.",
     status: "urgent",
-    date: "2026-04-25"
+    date: "2026-04-25",
+    image: "./assets/item-macbook.svg"
   },
   {
     id: "cc-002",
@@ -42,7 +52,8 @@ const seedItems = [
     descriptor: "Name starts with A. Patel",
     description: "Found near the attendance scanner and handed to class representative.",
     status: "open",
-    date: "2026-04-24"
+    date: "2026-04-24",
+    image: "./assets/item-id-card.svg"
   },
   {
     id: "cc-003",
@@ -54,7 +65,8 @@ const seedItems = [
     descriptor: "Blue bottle with white cap",
     description: "Bottle still had cold water inside and a sticker from the literature fest.",
     status: "matched",
-    date: "2026-04-24"
+    date: "2026-04-24",
+    image: "./assets/item-hydro-flask.svg"
   },
   {
     id: "cc-004",
@@ -66,7 +78,8 @@ const seedItems = [
     descriptor: "Black with initials RK on the back",
     description: "Likely dropped during the robotics guest lecture.",
     status: "open",
-    date: "2026-04-23"
+    date: "2026-04-23",
+    image: "./assets/item-calculator.svg"
   },
   {
     id: "cc-005",
@@ -78,7 +91,8 @@ const seedItems = [
     descriptor: "Grey with debate club print",
     description: "Was folded and left on the second row after futsal practice.",
     status: "resolved",
-    date: "2026-04-25"
+    date: "2026-04-25",
+    image: "./assets/item-hoodie.svg"
   },
   {
     id: "cc-006",
@@ -90,7 +104,8 @@ const seedItems = [
     descriptor: "White case with blue silicone cover",
     description: "Case missing the left bud. Last seen before 8 PM on Thursday.",
     status: "open",
-    date: "2026-04-22"
+    date: "2026-04-22",
+    image: "./assets/item-airpods-case.svg"
   },
   {
     id: "cc-007",
@@ -102,7 +117,8 @@ const seedItems = [
     descriptor: "Brown kraft cover with botanical doodles",
     description: "Contains architecture sketches and one bookmark from the design festival.",
     status: "open",
-    date: "2026-04-21"
+    date: "2026-04-21",
+    image: "./assets/item-sketchbook.svg"
   },
   {
     id: "cc-008",
@@ -114,7 +130,8 @@ const seedItems = [
     descriptor: "Two keys on a yellow smiley lanyard",
     description: "Lost around lunch break between 1 PM and 2 PM.",
     status: "urgent",
-    date: "2026-04-25"
+    date: "2026-04-25",
+    image: "./assets/item-keys.svg"
   },
   {
     id: "cc-009",
@@ -126,7 +143,8 @@ const seedItems = [
     descriptor: "Matte black Logitech mouse",
     description: "Collected after a coding workshop and held at the department office.",
     status: "open",
-    date: "2026-04-20"
+    date: "2026-04-20",
+    image: "./assets/item-mouse.svg"
   }
 ];
 
@@ -259,6 +277,7 @@ function render() {
     const typePill = template.querySelector(".type-pill");
     const statusPill = template.querySelector(".status-pill");
     const icon = template.querySelector(".card-icon");
+    const cardImage = template.querySelector(".card-image");
     const confirmationBanner = template.querySelector(".confirmation-banner");
     const confirmButton = template.querySelector(".confirm-button");
 
@@ -267,6 +286,8 @@ function render() {
     statusPill.textContent = labelize(report.status);
     statusPill.classList.add(report.status);
     icon.textContent = iconMap[report.category] || iconMap.other;
+    cardImage.src = report.image || getCategoryImage(report.category);
+    cardImage.alt = `${report.title} item preview`;
 
     template.querySelector(".card-category").textContent = formatCategoryLabel(report.category);
     template.querySelector(".card-title").textContent = report.title;
@@ -377,7 +398,8 @@ function handleSubmit(event) {
     descriptor: formData.get("descriptor").trim(),
     description: formData.get("description").trim(),
     status: "open",
-    date: new Date().toISOString().slice(0, 10)
+    date: new Date().toISOString().slice(0, 10),
+    image: getCategoryImage(formData.get("category"))
   };
 
   const saved = loadSavedItems();
@@ -581,6 +603,10 @@ function labelize(value) {
 
 function formatCategoryLabel(value) {
   return categoryLabels[value] || labelize(value);
+}
+
+function getCategoryImage(category) {
+  return categoryImageMap[category] || categoryImageMap.other;
 }
 
 function normalizeQuickFilter(value) {
