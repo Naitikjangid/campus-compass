@@ -1,0 +1,17 @@
+<svg width="640" height="400" viewBox="0 0 640 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="400" rx="36" fill="#EEF6F7"/>
+  <rect x="286" y="90" width="68" height="36" rx="10" fill="#E5EEF5"/>
+  <rect x="258" y="118" width="124" height="196" rx="48" fill="#3B82F6"/>
+  <rect x="258" y="118" width="124" height="196" rx="48" fill="url(#shine)" fill-opacity="0.32"/>
+  <rect x="300" y="84" width="40" height="20" rx="8" fill="#F8FAFC"/>
+  <rect x="275" y="154" width="90" height="18" rx="9" fill="#FFFFFF" fill-opacity="0.9"/>
+  <circle cx="276" cy="262" r="18" fill="#F8FAFC"/>
+  <path d="M265 262L273 270L289 254" stroke="#0F766E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="320" y="356" text-anchor="middle" fill="#1E3A56" font-family="Arial, sans-serif" font-size="28" font-weight="700">Blue Hydro Flask</text>
+  <defs>
+    <linearGradient id="shine" x1="258" y1="118" x2="382" y2="314" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#0F5F86" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>

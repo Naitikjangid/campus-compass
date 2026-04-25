@@ -1,0 +1,11 @@
+<svg width="640" height="400" viewBox="0 0 640 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="400" rx="36" fill="#F7F0E4"/>
+  <rect x="140" y="84" width="360" height="230" rx="28" fill="#FFFDFC" stroke="#C8D3DB" stroke-width="8"/>
+  <rect x="176" y="122" width="118" height="118" rx="18" fill="#D9F4EB"/>
+  <circle cx="235" cy="166" r="26" fill="#0F766E"/>
+  <path d="M196 224C207 203 223 194 235 194C247 194 263 203 274 224" stroke="#0F766E" stroke-width="14" stroke-linecap="round"/>
+  <rect x="320" y="134" width="132" height="20" rx="10" fill="#243447"/>
+  <rect x="320" y="174" width="100" height="16" rx="8" fill="#667085"/>
+  <rect x="176" y="268" width="276" height="14" rx="7" fill="#E5E7EB"/>
+  <text x="320" y="356" text-anchor="middle" fill="#243447" font-family="Arial, sans-serif" font-size="28" font-weight="700">Student ID Card</text>
+</svg>
