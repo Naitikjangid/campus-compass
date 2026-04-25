@@ -27,7 +27,12 @@
               <h1>Campus Compass</h1>
             </div>
           </div>
-          <a class="ghost-link" href="#report-form">Report an item</a>
+          <div class="topbar-actions">
+            <p class="session-chip" id="session-chip">Guest mode</p>
+            <button class="ghost-button" id="auth-trigger" type="button">Student login</button>
+            <button class="ghost-button hidden" id="logout-button" type="button">Logout</button>
+            <a class="ghost-link" href="#report-form">Report an item</a>
+          </div>
         </nav>
 
         <div class="hero-grid">
@@ -197,6 +202,15 @@
           </div>
 
           <form class="report-card" id="report-item-form">
+            <div class="report-auth-bar">
+              <p class="report-auth-note" id="report-auth-note">
+                Sign in with your student login to publish a tracked report and manage receipt access.
+              </p>
+              <button class="ghost-button" id="report-auth-button" type="button">
+                Student login
+              </button>
+            </div>
+
             <div class="form-grid">
               <label>
                 <span>Report type</span>
@@ -244,6 +258,19 @@
                 <span>Color / identifier</span>
                 <input name="descriptor" type="text" placeholder="Blue with name sticker" required />
               </label>
+
+              <label class="upload-field">
+                <span>Upload item image</span>
+                <input id="item-image" name="itemImage" type="file" accept="image/*" />
+              </label>
+
+              <div class="upload-preview hidden" id="upload-preview">
+                <img
+                  id="upload-preview-image"
+                  alt="Selected item preview"
+                  loading="lazy"
+                />
+              </div>
             </div>
 
             <label class="message-field">
@@ -265,6 +292,68 @@
       </main>
     </div>
 
+    <div class="modal-shell hidden" id="auth-modal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-auth="true"></div>
+      <section class="modal-card auth-card" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+        <button class="modal-close" id="close-auth-modal" type="button" aria-label="Close dialog">
+          Close
+        </button>
+        <p class="eyebrow">Student access</p>
+        <h3 id="auth-title">Student login interface</h3>
+        <p class="modal-text">
+          Sign in to post lost items, upload item photos, and confirm that you personally received your item.
+        </p>
+
+        <div class="auth-toggle" id="auth-toggle">
+          <button class="chip active" data-auth-view="login" type="button">Login</button>
+          <button class="chip" data-auth-view="register" type="button">Create account</button>
+        </div>
+
+        <form class="auth-form" id="login-form">
+          <div class="form-grid compact-grid">
+            <label>
+              <span>Student ID</span>
+              <input name="studentId" type="text" placeholder="2023CS101" required />
+            </label>
+
+            <label>
+              <span>Password</span>
+              <input name="password" type="password" placeholder="Enter password" required />
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <p id="login-feedback">Demo owner logins use password <strong>campus123</strong>.</p>
+            <button class="primary-button" type="submit">Login</button>
+          </div>
+        </form>
+
+        <form class="auth-form hidden" id="register-form">
+          <div class="form-grid compact-grid">
+            <label>
+              <span>Full name</span>
+              <input name="fullName" type="text" placeholder="Aarav Sharma" required />
+            </label>
+
+            <label>
+              <span>Student ID</span>
+              <input name="studentId" type="text" placeholder="2025IT145" required />
+            </label>
+
+            <label class="full-span">
+              <span>Password</span>
+              <input name="password" type="password" placeholder="Create a password" required />
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <p id="register-feedback">Your account is stored locally in this browser for the demo.</p>
+            <button class="primary-button" type="submit">Create account</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
     <div class="modal-shell hidden" id="confirmation-modal" aria-hidden="true">
       <div class="modal-backdrop" data-close-modal="true"></div>
       <section
@@ -279,7 +368,7 @@
         <p class="eyebrow">Item found confirmation</p>
         <h3 id="confirmation-title">Confirm this item was found</h3>
         <p class="modal-text" id="confirmation-subtitle">
-          Update the listing with a short note so everyone knows the item has been recovered.
+          Add a short note so the owner can see the item has been located and confirm receipt later.
         </p>
 
         <form class="confirmation-form" id="confirmation-form">
@@ -295,10 +384,45 @@
           </label>
 
           <div class="form-actions">
-            <p id="confirmation-feedback">This will mark the case as resolved.</p>
+            <p id="confirmation-feedback">This will move the case to match in review.</p>
             <div class="action-row">
               <button class="ghost-button" id="cancel-confirmation" type="button">Cancel</button>
-              <button class="primary-button" type="submit">Confirm found</button>
+              <button class="primary-button" type="submit">Save found note</button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <div class="modal-shell hidden" id="receipt-modal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-receipt="true"></div>
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="receipt-title">
+        <button class="modal-close" id="close-receipt-modal" type="button" aria-label="Close dialog">
+          Close
+        </button>
+        <p class="eyebrow">Owner confirmation</p>
+        <h3 id="receipt-title">Declare you received your item</h3>
+        <p class="modal-text" id="receipt-subtitle">
+          This action is restricted to the student who originally reported the lost item.
+        </p>
+
+        <form class="confirmation-form" id="receipt-form">
+          <label class="message-field">
+            <span>Receipt note</span>
+            <textarea
+              id="receipt-note"
+              name="receiptNote"
+              rows="4"
+              placeholder="Example: Collected from the library desk after showing my student ID."
+              required
+            ></textarea>
+          </label>
+
+          <div class="form-actions">
+            <p id="receipt-feedback">This will mark the case as resolved.</p>
+            <div class="action-row">
+              <button class="ghost-button" id="cancel-receipt" type="button">Cancel</button>
+              <button class="primary-button" type="submit">Mark as received</button>
             </div>
           </div>
         </form>
@@ -337,9 +461,14 @@
           </div>
         </dl>
         <div class="confirmation-banner hidden"></div>
+        <div class="received-banner hidden"></div>
+        <div class="owner-access-note hidden"></div>
         <div class="card-actions">
           <button class="secondary-button confirm-button hidden" type="button">
             Confirm item found
+          </button>
+          <button class="secondary-button received-button hidden" type="button">
+            I received my item
           </button>
         </div>
       </article>
