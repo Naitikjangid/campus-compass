@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Campus Compass | Lost &amp; Found Portal</title>
+    <meta
+      name="description"
+      content="Campus Compass is a student-friendly lost-and-found portal for reporting, searching, and reclaiming items across college campus."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <nav class="topbar">
+          <div class="brand-lockup">
+            <div class="brand-badge">CC</div>
+            <div>
+              <p class="eyebrow">Student support hub</p>
+              <h1>Campus Compass</h1>
+            </div>
+          </div>
+          <a class="ghost-link" href="#report-form">Report an item</a>
+        </nav>
+
+        <div class="hero-grid">
+          <section class="hero-copy">
+            <p class="hero-kicker">Lost something between class and the library?</p>
+            <h2>Find what went missing. Return what someone else needs.</h2>
+            <p class="hero-text">
+              Search live campus reports, filter by building or category, and help reconnect
+              students with essentials faster.
+            </p>
+
+            <div class="hero-stats" id="hero-stats">
+              <article>
+                <span id="stat-total">0</span>
+                <p>active cases</p>
+              </article>
+              <article>
+                <span id="stat-found">0</span>
+                <p>found items</p>
+              </article>
+              <article>
+                <span id="stat-resolved">0</span>
+                <p>resolved cases</p>
+              </article>
+            </div>
+          </section>
+
+          <aside class="hero-panel">
+            <p class="panel-label">Hot zones this week</p>
+            <div class="zone-list">
+              <article>
+                <strong>Central Library</strong>
+                <span>12 item reports</span>
+              </article>
+              <article>
+                <strong>North Cafeteria</strong>
+                <span>7 item reports</span>
+              </article>
+              <article>
+                <strong>Engineering Block</strong>
+                <span>5 item reports</span>
+              </article>
+            </div>
+            <div class="hero-panel-note">
+              <span class="live-dot"></span>
+              Updated instantly as new reports are submitted
+            </div>
+          </aside>
+        </div>
+      </header>
+
+      <main>
+        <section class="search-section" aria-labelledby="search-heading">
+          <div class="section-heading">
+            <p class="eyebrow">Search and filter</p>
+            <h3 id="search-heading">Browse the latest lost and found posts</h3>
+          </div>
+
+          <div class="search-card">
+            <label class="search-field" for="search-input">
+              <span>Search by item, color, location, or keyword</span>
+              <input
+                id="search-input"
+                type="search"
+                placeholder="Try: blue water bottle, ID card, library..."
+                autocomplete="off"
+              />
+            </label>
+
+            <div class="filter-grid">
+              <label>
+                <span>Type</span>
+                <select id="type-filter">
+                  <option value="all">All reports</option>
+                  <option value="lost">Lost</option>
+                  <option value="found">Found</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Category</span>
+                <select id="category-filter">
+                  <option value="all">All categories</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Zone</span>
+                <select id="zone-filter">
+                  <option value="all">All zones</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Timeline</span>
+                <select id="time-filter">
+                  <option value="all">Any time</option>
+                  <option value="3">Last 3 days</option>
+                  <option value="7">Last 7 days</option>
+                  <option value="14">Last 14 days</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Status</span>
+                <select id="status-filter">
+                  <option value="all">Any status</option>
+                  <option value="open">Open</option>
+                  <option value="urgent">Urgent</option>
+                  <option value="matched">Match in review</option>
+                  <option value="resolved">Resolved</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Sort</span>
+                <select id="sort-filter">
+                  <option value="newest">Newest first</option>
+                  <option value="oldest">Oldest first</option>
+                  <option value="location">Location A-Z</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="chip-row" id="quick-filters">
+              <button class="chip active" data-chip="all">All</button>
+              <button class="chip" data-chip="electronics">Electronics</button>
+              <button class="chip" data-chip="id">ID &amp; cards</button>
+              <button class="chip" data-chip="accessories">Accessories</button>
+              <button class="chip" data-chip="study">Study gear</button>
+            </div>
+
+            <div class="results-bar">
+              <p id="results-count">0 items</p>
+              <button class="reset-link" id="reset-filters" type="button">Reset filters</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="results-section" aria-labelledby="results-heading">
+          <div class="section-heading inline-heading">
+            <div>
+              <p class="eyebrow">Live reports</p>
+              <h3 id="results-heading">Campus listings</h3>
+            </div>
+            <p class="legend">
+              <span class="legend-pill lost-pill">Lost</span>
+              <span class="legend-pill found-pill">Found</span>
+            </p>
+          </div>
+
+          <div class="results-grid" id="results-grid" aria-live="polite"></div>
+          <div class="empty-state hidden" id="empty-state">
+            <h4>No matches yet</h4>
+            <p>Try a broader keyword or clear one of the filters to see more campus reports.</p>
+          </div>
+        </section>
+
+        <section class="report-section" id="report-form" aria-labelledby="report-heading">
+          <div class="section-heading">
+            <p class="eyebrow">Post a report</p>
+            <h3 id="report-heading">Add a new lost or found item</h3>
+          </div>
+
+          <form class="report-card" id="report-item-form">
+            <div class="form-grid">
+              <label>
+                <span>Report type</span>
+                <select name="type" required>
+                  <option value="lost">Lost</option>
+                  <option value="found">Found</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Item name</span>
+                <input name="title" type="text" placeholder="Black calculator" required />
+              </label>
+
+              <label>
+                <span>Category</span>
+                <select name="category" required>
+                  <option value="electronics">Electronics</option>
+                  <option value="id">ID &amp; cards</option>
+                  <option value="accessories">Accessories</option>
+                  <option value="study">Study gear</option>
+                  <option value="clothing">Clothing</option>
+                  <option value="other">Other</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Zone</span>
+                <select name="zone" required>
+                  <option value="Central Library">Central Library</option>
+                  <option value="Engineering Block">Engineering Block</option>
+                  <option value="North Cafeteria">North Cafeteria</option>
+                  <option value="Auditorium">Auditorium</option>
+                  <option value="Sports Complex">Sports Complex</option>
+                  <option value="South Hostel">South Hostel</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Specific spot</span>
+                <input name="location" type="text" placeholder="2nd floor reading bay" required />
+              </label>
+
+              <label>
+                <span>Color / identifier</span>
+                <input name="descriptor" type="text" placeholder="Blue with name sticker" required />
+              </label>
+            </div>
+
+            <label class="message-field">
+              <span>Short description</span>
+              <textarea
+                name="description"
+                rows="4"
+                placeholder="Include standout details, date seen, and how to verify ownership."
+                required
+              ></textarea>
+            </label>
+
+            <div class="form-actions">
+              <p id="form-feedback">Submissions are stored in your browser for this demo.</p>
+              <button class="primary-button" type="submit">Publish report</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <template id="card-template">
+      <article class="item-card">
+        <div class="card-topline">
+          <span class="type-pill"></span>
+          <span class="status-pill"></span>
+        </div>
+        <div class="card-body">
+          <div class="card-icon" aria-hidden="true"></div>
+          <div>
+            <p class="card-category"></p>
+            <h4 class="card-title"></h4>
+          </div>
+        </div>
+        <p class="card-description"></p>
+        <dl class="card-meta">
+          <div>
+            <dt>Zone</dt>
+            <dd class="card-zone"></dd>
+          </div>
+          <div>
+            <dt>Spot</dt>
+            <dd class="card-location"></dd>
+          </div>
+          <div>
+            <dt>Posted</dt>
+            <dd class="card-date"></dd>
+          </div>
+        </dl>
+      </article>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
